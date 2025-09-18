@@ -57,3 +57,58 @@ inv(F, I, A, N) :-
 factorial_inverso(F, N) :-
     F > 0,
     inv(F, 1, 1, N).    
+
+% Practica...
+
+%Factorial
+fac(0,1).
+fac(1,1).
+fac(N, F):-
+    N > 0,
+    N1 is N - 1,
+    fac(N1, F1),
+    F is F1 * N.
+
+%Factorial inverso modo facil
+
+fact_inv(X,R):- 
+    gen(1,X,R), fac(R,Z), X =:= Z.
+
+%Fibonacci.
+fibo(0,0).
+fibo(1,1).
+
+fibo(X,F):-
+    X > 1,
+    X1 is X-1,
+    fibo(X1, F1),
+    X2 is X-2,
+    fibo(X2,F2),
+    F is F1 + F2, !.
+
+%Suma de los primeros N naturales:
+suma_naturales(0,0).
+suma_naturales(N, S):-
+    N > 0,
+    N1 is N - 1,
+    suma_naturales(N1, S1),
+    S is S1 + N.
+
+%Producto de los primeros N naturales:
+producto_naturales(1,1).
+producto_naturales(N, P):-
+    N > 1,
+    N1 is N - 1,
+    producto_naturales(N1, P1),
+    P is N * P1.
+
+%Potencia Recursiva:
+potencia(_, 0, R):- R is 1.
+potencia(Base, Exp, R):-
+    Exp > 0, Exp1 is Exp - 1, potencia(Base,Exp1,R1), R is R1 * Base.
+
+%Raiz de un numero:
+sqrt(N,R):-
+    gen(1,N,R),
+    F is R ** 2,
+    N =:= F.
