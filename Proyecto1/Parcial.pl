@@ -17,3 +17,6 @@ descompone(N, X, Y):-
     gen(A, Lim, B),
     Y is B ** 3,
     X + Y =:= N.
+
+%2. mcd(X,Y,Z) (máximo común divisor)
+
