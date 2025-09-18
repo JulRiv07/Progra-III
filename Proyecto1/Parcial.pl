@@ -40,5 +40,20 @@ suma(N, S):-
     suma(N1, S1),
     S is S1 + N ** 3.
 
+% 4. Factorial inverso
+inv(F, _, A, _) :-
+    A > F, !, fail.
 
+inv(F, I, A, N) :-
+    A =:= F, !,
+    N = I.
 
+inv(F, I, A, N) :-
+    A < F,
+    I1  is I + 1,
+    A1 is A * I1,
+    inv(F, I1, A1, N).
+
+factorial_inverso(F, N) :-
+    F > 0,
+    inv(F, 1, 1, N).    
