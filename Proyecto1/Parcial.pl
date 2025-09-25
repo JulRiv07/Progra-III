@@ -2,6 +2,9 @@
 
 %1. descompone(+N,-X,-Y) (cubos que suman N, con X =< Y)
 
+%Hola
+hecho(maria).
+
 gen(Min, Max, Min):-
     Min =< Max.
 
@@ -61,7 +64,7 @@ factorial_inverso(F, N) :-
 % Practica...
 
 %Factorial
-fac(0,1).
+fac(0,1).   
 fac(1,1).
 fac(N, F):-
     N > 0,
