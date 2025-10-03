@@ -1,60 +1,37 @@
-%! Cada lado del poligono es un segmento entre dos puntos 
-segmento((X1,Y1), (X2,Y2)). 
-%! Dos segmentos estan conectados si el ultimo punto de uno es el inicio de otro
-conectados(segmento(_, P), segmento(P,_)).
+%! Estructura (Padre, Madre, [Lista de hijos])
+familia(persona(abraham, hombre), persona(mona, mujer), [persona(herbert, hombre), persona(homero, hombre)]).
+familia(persona(clancy, hombre), persona(jacqueline, mujer), [persona(patty, mujer), persona(selma, mujer), persona(marge, mujer)]).
+familia(persona(homero, hombre), persona(marge, mujer), [persona(bart, hombre), persona(lisa, mujer), persona(maggie, mujer)]).
+familia(_, persona(selma, mujer), [persona(ling, mujer)]).
 
-%? Poligono cerrado
-%* Caso base: Dos segmentos y conectados
-poligono([S1,S2]):-
-    conectados(S1, S2).
+%! Padre, Madre, Progenitor
+padre(P, H):-
+    familia(persona(P, hombre), _, Hijos),
+    member(persona(H, _), Hijos).
 
-%* Caso recursivo: Primero conectado al segundo, y el resto tambien es poligono 
-poligono([S1,S2| Tail]):-
-    conectados(S1,S2),
-    poligono([S2|Tail]).
+madre(M, H):-
+    familia(_, persona(M, mujer), Hijos),
+    member(persona(H, _), Hijos).
 
-%?Poligono cerrado
-%* Debe tener > 2 lados
-%* Debe ser poligono abierto
-%* Ultimo conectado con el primero
-poligono_cerrado(L):-
-    length(L, Int), Tam > 2,
-    poligono(L),
-    L = [S1| _], 
-    last(L, SL),
-    conectados(SL, S1).
+progenitor(P, H):-
+    padre(P, H) ; madre(P, H).
 
-%? Triangulo
-%* Un poligono cerrado con 3 segmentos
-triangulo(L):-
-    length(L, 3),
-    poligono_cerrado(L).
+abuelo(A, H):-
+    (padre(A, Z), padre(Z, H)) ; (padre(A,Z), madre(Z, H)).
 
-%! Propiedades geometricas
-%? Calcular longitud
-longitud2(segmento((X1, Y1), (X2,Y2)), L2):-
-    DX is X2-X1, DY is Y2-Y1,
-    L2 is DX*DX + DY*DY.
+abuela(A, H):-
+    (madre(A, Z), madre(Z, H)) ; (madre(A, Z), padre(Z, H)).
 
-%! Horizontales/Verticales
-segmento_horizontal(segmento((_, Y1),(_,Y2))):-
-    Y1 =:= Y2.
+hijo_genero(H, Genero):-
+    familia(_,_,Hijos),
+    member(persona(H, Genero), Hijos).
 
-segmento_vertical(segmento((X1,_), (X2,_))):-
-    X1 =:= X2.
+hermano(X, Y):-
+    progenitor(Z, X), progenitor(Z, Y),
+    X \= Y, hijo_genero(X, hombre).
 
-%? Cuadrado
-%* Un poligono cerrado con 4 segmentos
-
-cuadrado(L):-
-    length(L, 4),
-    poligono_cerrado(L),
-    maplist(horizontal_o_vertical, L),
-    dist_iguales(L),
-    conteo_hv(L, 2, 2),
-    alternan(L).
-
-    
-    
-
-
+hermana(X, Y):-
+    familia(_,_,Hijos),
+    member(persona(X, mujer), Hijos),
+    member(persona(Y,_), Hijos),
+    X \= Y.
