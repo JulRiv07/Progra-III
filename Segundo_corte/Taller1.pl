@@ -29,3 +29,14 @@ hermanos(A, B):-
     progenitor(P, B).
 
 abuelo(A , N):-
+    (padre(A, P), padre(P, N) ; padre(A, M), madre(M, N)).
+
+abuela(A, N):-
+    (madre(M, P), madre(P, N) ; madre(M, P), padre(P, N)).
+
+%! OJO CORREGIR !!
+tio(T, S):-
+    (abuelo(A, P), padre(P, S), hermanos(P, T)).
+
+
+
