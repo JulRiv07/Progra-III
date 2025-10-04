@@ -1,4 +1,4 @@
-%! 1 Familia Simpson
+%! 1 Familia Simpson...
 
 familia(persona(abraham, hombre), persona(mona, mujer), [persona(herbert, hombre), persona(homero, hombre)]).
 familia(persona(clancy, hombre), persona(jacqueline, mujer), [persona(marge, mujer), persona(patty, mujer), persona(selma, mujer)]).
@@ -59,5 +59,9 @@ progenitor(P, S), hermanos(P, T), genero(T, mujer).
 primos(X, Y):-
     tio(T, X), progenitor(T, Y).
 
+%! 2. Ciudades de Canada...
 
+canada([ciudad(vancouver), ciudad(edmonton), ciudad(saskatoon), ciudad(winnipeg), ciudad(regina), ciudad(calgary)],
+        [conexion(vancouver, edmonton, 16), conexion(vancouver, calgary, 13), conexion(calgary, edmonton, 4), conexion(calgary, regina, 14), conexion(regina, winnipeg, 4),
+        conexion(regina, saskatoon, 7), conexion(saskatoon, winnipeg, 20), conexion(saskatoon, calgary, 9), conexion(edmonton, saskatoon, 12)]).
 
