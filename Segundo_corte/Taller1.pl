@@ -1,8 +1,15 @@
-%! estructura(Padre, Madre, [Hijos]).
+%! 1 Familia Simpson
+
 familia(persona(abraham, hombre), persona(mona, mujer), [persona(herbert, hombre), persona(homero, hombre)]).
 familia(persona(clancy, hombre), persona(jacqueline, mujer), [persona(marge, mujer), persona(patty, mujer), persona(selma, mujer)]).
 familia(persona(homero, hombre), persona(marge, mujer), [persona(bart, hombre), persona(lisa, mujer), persona(maggie, mujer)]).
 familia(_,persona(selma, mujer),[persona(ling, mujer)]).
+
+genero(N, G):-
+    (familia(persona(N,G), _,_)
+    ; familia(_, persona(N, G), _)
+    ; familia(_,_, Hijos), member(persona(N,G), Hijos)
+    ), !.
 
 padre(P, H):-
     familia(persona(P, hombre), _, Hijos),
@@ -13,7 +20,7 @@ madre(M, H):-
     member(persona(H, _), Hijos).
 
 progenitor(P, H):-
-    madre(P, H) , padre(P, H).
+    padre(P, H); madre(P, H).
 
 hijo(H, P):-
     (familia(persona(P, hombre), _, Hijos) ; familia(_, persona(P, mujer), Hijos)),
@@ -28,15 +35,29 @@ hermanos(A, B):-
     progenitor(P, A), 
     progenitor(P, B).
 
+hermano(A, B):-
+    hermanos(A, B), genero(A, hombre).
+
+hermana(A, B):-
+    hermanos(A, B), genero(A, mujer).
+
 abuelo(A , N):-
-    (padre(A, P), padre(P, N) ; padre(A, M), madre(M, N)).
+    (padre(A, P), padre(P, N) ; padre(A, P), madre(P, N)).
 
 abuela(A, N):-
-    (madre(M, P), madre(P, N) ; madre(M, P), padre(P, N)).
+    (madre(A, P), madre(P, N) ; madre(A, P), padre(P, N)).
 
-%! OJO CORREGIR !!
+tix(T, S):-
+    progenitor(P, S), hermanos(P, T).
+
 tio(T, S):-
-    (abuelo(A, P), padre(P, S), hermanos(P, T)).
+    progenitor(P, S), hermanos(P, T), genero(T, hombre).
+
+tia(T, S):-
+progenitor(P, S), hermanos(P, T), genero(T, mujer).
+
+primos(X, Y):-
+    tio(T, X), progenitor(T, Y).
 
 
 
