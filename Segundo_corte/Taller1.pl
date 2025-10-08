@@ -109,12 +109,19 @@ costo_camino(Ciudad1,Ciudad2,CostoTotal):-
 costo_recursivo(Ciudad1,Ciudad2,Costo,_):-
 	arista(Ciudad1,Ciudad2,Costo).
 
+
 costo_recursivo(Ciudad1,Ciudad2,CostoTotal,Visitadas):-
     arista(Ciudad1,NextCity,Costo_C1),
     \+ member(NextCity, Visitadas),
     costo_recursivo(NextCity,Ciudad2,Costo_C2,[NextCity|Visitadas]),
     CostoTotal is Costo_C1 + Costo_C2, !.
     
+
+camino(Ciudad1,Ciudad2):-
+    camino_recursivo(Ciudad1,Ciudad2, [Ciudad1]).
+
+camino_recursivo(Ciudad1,Ciudad2,_):-
+	arista(Ciudad1,Ciudad2,_).
 
 
 
