@@ -61,67 +61,65 @@ primos(X, Y):-
 
 %! 2. Ciudades de Canada...
 
-ciudades([ conexion(vancouver, edmonton, 16),
-            conexion(vancouver, calgary, 13),
-            conexion(calgary, edmonton, 4),
-            conexion(calgary, regina, 14),
-            conexion(regina, winnipeg, 4),
-            conexion(regina, saskatoon, 7),
-            conexion(saskatoon, calgary, 9),
-            conexion(edmonton, saskatoon, 12)]).
+%! 2. Ciudades de Canada...
 
-hay_conexion_directa(Ciudad1,Ciudad2):-
-    ciudades(ListaConexiones),
-    (
-    member(conexion(Ciudad1,Ciudad2,_), ListaConexiones)
-    ;
-    member(conexion(Ciudad1,Ciudad2,_), ListaConexiones)
-    ), !.
+ciudades([
+    conexion(vancouver, edmonton, 16),
+    conexion(vancouver, calgary, 13),
+    conexion(calgary,   edmonton, 4),
+    conexion(calgary,   regina,   14),
+    conexion(regina,    winnipeg, 4),
+    conexion(regina,    saskatoon,7),
+    conexion(saskatoon, calgary,  9),
+    conexion(edmonton,  saskatoon,12)
+]).
 
-tiene_aristas(Ciudad):-
-    ciudades(ListaConexiones),
-    (   
-    member(conexion(Ciudad,_,_), ListaConexiones)
-    ;   
-    member(conexion(_,Ciudad,_), ListaConexiones)
-    ), !.
+% --- consultas básicas (no dirigido) ---
 
-cuales_aristas_tiene(Ciudad, Arista):-
-    ciudades(ListaConexiones),
-    (
-    member(conexion(Ciudad,Arista,_), ListaConexiones)
-    ;
-    member(conexion(Ciudad,Arista,_), ListaConexiones)
-    ).
-
-%Costo Recursivo.
-arista(Ciudad1,Ciudad2,Costo):-
+hay_conexion_directa(C1, C2) :-
     ciudades(L),
-    (   
-    member(conexion(Ciudad1,Ciudad2,Costo),L)
-    ;   
-    member(conexion(Ciudad2,Ciudad1,Costo),L)
+    ( member(conexion(C1,C2,_), L)
+    ; member(conexion(C2,C1,_), L)
+    ), !.
+
+tiene_aristas(C) :-
+    ciudades(L),
+    ( member(conexion(C,_,_), L)
+    ; member(conexion(_,C,_), L)
+    ), !.
+
+cuales_aristas_tiene(C, A) :-
+    ciudades(L),
+    ( member(conexion(C,A,_), L)
+    ; member(conexion(A,C,_), L)
     ).
 
-costo_camino(Ciudad1,Ciudad2,CostoTotal):-
-    costo_recursivo(Ciudad1,Ciudad2,CostoTotal, [Ciudad1]).
 
-costo_recursivo(Ciudad1,Ciudad2,Costo,_):-
-	arista(Ciudad1,Ciudad2,Costo).
+    arista(C1, C2, Costo) :-
+    ciudades(L),
+    ( member(conexion(C1,C2,Costo), L)
+    ; member(conexion(C2,C1,Costo), L)
+    ).
 
+costo_camino(Origen, Destino, CostoTotal) :-
+    costo_recursivo(Origen, Destino, CostoTotal, [Origen]).
 
-costo_recursivo(Ciudad1,Ciudad2,CostoTotal,Visitadas):-
-    arista(Ciudad1,NextCity,Costo_C1),
-    \+ member(NextCity, Visitadas),
-    costo_recursivo(NextCity,Ciudad2,Costo_C2,[NextCity|Visitadas]),
-    CostoTotal is Costo_C1 + Costo_C2, !.
-    
+costo_recursivo(C1, C2, Costo, _) :-
+    arista(C1, C2, Costo).
 
-camino(Ciudad1,Ciudad2):-
-    camino_recursivo(Ciudad1,Ciudad2, [Ciudad1]).
+costo_recursivo(C1, C2, CostoTotal, Visitadas) :-
+    arista(C1, Next, C1N),
+    \+ member(Next, Visitadas),
+    costo_recursivo(Next, C2, CN, [Next|Visitadas]),
+    CostoTotal is C1N + CN, !.
 
-camino_recursivo(Ciudad1,Ciudad2,_):-
-	arista(Ciudad1,Ciudad2,_).
+camino(Origen, Destino) :-
+    camino_recursivo(Origen, Destino, [Origen]).
 
+camino_recursivo(C1, C2, _) :-
+    arista(C1, C2, _).
 
-
+camino_recursivo(C1, C2, Visitadas) :-
+    arista(C1, Next, _),
+    \+ member(Next, Visitadas),
+    camino_recursivo(Next, C2, [Next|Visitadas]).
