@@ -70,13 +70,12 @@ ciudades([
     conexion(calgary,   regina,   14),
     conexion(regina,    winnipeg, 4),
     conexion(regina,    saskatoon,7),
+    conexion(saskatoon, winnipeg, 20),
     conexion(saskatoon, calgary,  9),
     conexion(edmonton,  saskatoon,12)
 ]).
 
-% --- consultas básicas (no dirigido) ---
-
-hay_conexion_directa(C1, C2) :-
+hay_conexion(C1, C2) :-
     ciudades(L),
     ( member(conexion(C1,C2,_), L)
     ; member(conexion(C2,C1,_), L)
