@@ -61,7 +61,60 @@ primos(X, Y):-
 
 %! 2. Ciudades de Canada...
 
-canada([ciudad(vancouver), ciudad(edmonton), ciudad(saskatoon), ciudad(winnipeg), ciudad(regina), ciudad(calgary)],
-        [conexion(vancouver, edmonton, 16), conexion(vancouver, calgary, 13), conexion(calgary, edmonton, 4), conexion(calgary, regina, 14), conexion(regina, winnipeg, 4),
-        conexion(regina, saskatoon, 7), conexion(saskatoon, winnipeg, 20), conexion(saskatoon, calgary, 9), conexion(edmonton, saskatoon, 12)]).
+ciudades([ conexion(vancouver, edmonton, 16),
+            conexion(vancouver, calgary, 13),
+            conexion(calgary, edmonton, 4),
+            conexion(calgary, regina, 14),
+            conexion(regina, winnipeg, 4),
+            conexion(regina, saskatoon, 7),
+            conexion(saskatoon, calgary, 9),
+            conexion(edmonton, saskatoon, 12)]).
+
+hay_conexion_directa(Ciudad1,Ciudad2):-
+    ciudades(ListaConexiones),
+    (
+    member(conexion(Ciudad1,Ciudad2,_), ListaConexiones)
+    ;
+    member(conexion(Ciudad1,Ciudad2,_), ListaConexiones)
+    ), !.
+
+tiene_aristas(Ciudad):-
+    ciudades(ListaConexiones),
+    (   
+    member(conexion(Ciudad,_,_), ListaConexiones)
+    ;   
+    member(conexion(_,Ciudad,_), ListaConexiones)
+    ), !.
+
+cuales_aristas_tiene(Ciudad, Arista):-
+    ciudades(ListaConexiones),
+    (
+    member(conexion(Ciudad,Arista,_), ListaConexiones)
+    ;
+    member(conexion(Ciudad,Arista,_), ListaConexiones)
+    ).
+
+%Costo Recursivo.
+arista(Ciudad1,Ciudad2,Costo):-
+    ciudades(L),
+    (   
+    member(conexion(Ciudad1,Ciudad2,Costo),L)
+    ;   
+    member(conexion(Ciudad2,Ciudad1,Costo),L)
+    ).
+
+costo_camino(Ciudad1,Ciudad2,CostoTotal):-
+    costo_recursivo(Ciudad1,Ciudad2,CostoTotal, [Ciudad1]).
+
+costo_recursivo(Ciudad1,Ciudad2,Costo,_):-
+	arista(Ciudad1,Ciudad2,Costo).
+
+costo_recursivo(Ciudad1,Ciudad2,CostoTotal,Visitadas):-
+    arista(Ciudad1,NextCity,Costo_C1),
+    \+ member(NextCity, Visitadas),
+    costo_recursivo(NextCity,Ciudad2,Costo_C2,[NextCity|Visitadas]),
+    CostoTotal is Costo_C1 + Costo_C2, !.
+    
+
+
 
